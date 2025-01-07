@@ -44,13 +44,7 @@
                         <!---->
                         <!-- This is what your users will see when the form-->
                         <!-- has successfully submitted-->
-                        <div class="d-none" id="submitSuccessMessage">
-                            <div class="text-center mb-3 mt-2">
-                                <div class="fw-bolder">Form submission successful!</div>
-                                To activate this form, sign up at
-                                <br />
-                                <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                            </div>
+                        <div class="d-none" id="result">
                         </div>
                         <!-- Submit error message-->
                         <!---->
@@ -65,7 +59,7 @@
         <!-- For more icon options, visit https://fontawesome.com/icons?d=gallery&p=2&s=brands-->
         <div class="social-icons">
             <div class="d-flex flex-row flex-lg-column justify-content-center align-items-center h-100 mt-3 mt-lg-0">
-                <a class="btn btn-dark m-3" style="background-color: #E6A97E; border-width: 0;" href="#!"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-dark m-3" style="background-color: #E6A97E; border-width: 0;" target="_blank"; href="https://www.facebook.com/profile.php?id=61571516577131"><i class="fab fa-facebook-f"></i></a>
                 <a class="btn btn-dark m-3" style="background-color: #E6A97E; border-width: 0;" href="#!"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
@@ -79,4 +73,45 @@
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     </body>
+	
+	<script>
+	const form = document.getElementById('contactForm');
+	const result = document.getElementById('result');
+
+	form.addEventListener('submit', function(e) {
+	  e.preventDefault();
+	  const formData = new FormData(form);
+	  const object = Object.fromEntries(formData);
+	  const json = JSON.stringify(object);
+	  result.innerHTML = "Please wait..."
+
+		fetch('https://api.web3forms.com/submit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: json
+			})
+			.then(async (response) => {
+				let json = await response.json();
+				if (response.status == 200) {
+					result.innerHTML = "Form submitted successfully";
+				} else {
+					console.log(response);
+					result.innerHTML = json.message;
+				}
+			})
+			.catch(error => {
+				console.log(error);
+				result.innerHTML = "Something went wrong!";
+			})
+			.then(function() {
+				form.reset();
+				setTimeout(() => {
+					result.style.display = "none";
+				}, 3000);
+			});
+	});
+	</script>
 </html>
