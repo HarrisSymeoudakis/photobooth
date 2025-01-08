@@ -33,22 +33,33 @@
                     <!-- https://startbootstrap.com/solution/contact-forms-->
                     <!-- to get an API token!-->
                     <div>
-					<form method="POST" id="form">
-
-    <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
-
-    <input type="text" placeholder="name" name="name" required>
-    <input type="email" name="email" placeholder="email" required>
-    <div>
-		<textarea name="message" placeholder="message" required></textarea>
-	</div>
-    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
-
-    <button class="btn btn-dark m-3" style="background-color: #E6A97E; color: white; border-width: 0;" type="submit">Submit Form</button>
-
-    <div id="result"></div>
-
-</form>
+					<form action="https://api.web3forms.com/submit" method="POST" id="contactForm">
+          <div class="row align-items-stretch mb-5">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="hidden" name="access_key" value="241a765c-4a6f-4567-8fa0-53f949499b98">
+                <input class="form-control" id="name" name="First Name" type="text" placeholder="Your Name *" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" id="email" type="email" name="email" placeholder="Your Email *" data-sb-validations="required,email" />
+              </div>
+              <div class="form-group mb-md-0">
+                <input class="form-control" id="phone" type="text" name="Phone Number" placeholder="Your Phone *" required>
+              </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column">
+              <div class="form-group flex-grow-1" style="height: 25%;">
+                <textarea class="form-control h-100" id="subject" name="subject" placeholder="Subject *" required></textarea>
+              </div>
+              <div class="form-group flex-grow-3" style="flex-grow: 3;">
+                <textarea class="form-control h-100" id="message" name="message" placeholder="Your Message *" required></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-primary btn-xl text-uppercase " id="submitButton" type="submit" style="background-color: #E6A97E; border-width: 0;">Send Message</button>
+          </div>
+        </form>
 					</div>
                 </div>
             </div>
@@ -70,46 +81,5 @@
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-		
-		<script>
-	const form = document.getElementById('contactForm');
-	const result = document.getElementById('result');
-
-	form.addEventListener('submit', function(e) {
-	  e.preventDefault();
-	  const formData = new FormData(form);
-	  const object = Object.fromEntries(formData);
-	  const json = JSON.stringify(object);
-	  result.innerHTML = "Please wait..."
-
-		fetch('https://api.web3forms.com/submit', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Accept': 'application/json'
-				},
-				body: json
-			})
-			.then(async (response) => {
-				let json = await response.json();
-				if (response.status == 200) {
-					result.innerHTML = "Form submitted successfully";
-				} else {
-					console.log(response);
-					result.innerHTML = json.message;
-				}
-			})
-			.catch(error => {
-				console.log(error);
-				result.innerHTML = "Something went wrong!";
-			})
-			.then(function() {
-				form.reset();
-				setTimeout(() => {
-					result.style.display = "none";
-				}, 3000);
-			});
-	});
-	</script>
     </body>
 </html>
